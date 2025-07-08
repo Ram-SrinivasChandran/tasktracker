@@ -28,4 +28,28 @@ public class TaskService {
         log.info("Leaving getTasks ()");
         return tasks;
     }
+
+    public Task updateTask(Long taskId, Task task) {
+        log.info("Updating task with ID: {}", taskId);
+        if (taskRepository.existsById(taskId)) {
+            task.setId(taskId);
+            Task updatedTask = taskRepository.save(task);
+            log.info("Task updated with ID: {}", updatedTask.getId());
+            return updatedTask;
+        } else {
+            log.warn("Task with ID: {} not found", taskId);
+            throw new RuntimeException(String.format("Task with ID: %d not found", taskId));
+        }
+    }
+
+    public void deleteTask(Long taskId) {
+        log.info("Deleting task with ID: {}", taskId);
+        if (taskRepository.existsById(taskId)) {
+            taskRepository.deleteById(taskId);
+            log.info("Task with ID: {} deleted successfully", taskId);
+        } else {
+            log.warn("Task with ID: {} not found, cannot delete", taskId);
+            throw new RuntimeException(String.format("Task with ID: %d not found", taskId));
+        }
+    }
 }
